@@ -1,0 +1,230 @@
+\documentclass[12pt]{article}
+\usepackage{design_ASC}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{listings}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=red,
+}
+
+\urlstyle{same}
+\setlength\parindent{0pt}
+
+\title{A SOTA Coding Problem\\ \href{https://github.com/Rishit-dagli/SOTA-Coding-Problem}{View on GitHub}}
+
+\author{ \href{https://www.rishit.tech}{Rishit Dagli}\\
+\href{https://twitter.com/rishit_dagli}{Twitter} $\vert$ \href{https://github.com/Rishit-dagli}{GitHub} $\vert$
+\href{https://medium.com/@rishit.dagli}{Medium} $\vert$
+\href{https://www.linkedin.com/in/rishit-dagli}{LinkedIn}
+}
+
+\date{\today}
+
+\begin{document}
+\setlength{\droptitle}{-5em}    
+
+\maketitle
+
+\section*{Introduction}
+
+I recently came across a State of the Art (SOTA) problem according 
+to me. How I define a problem to be really good-
+
+\begin{itemize}
+  \item While reading the problem it seems to be very easy
+  \item It becomes hard while you try and code it (By logic and not by knowledge of coding)
+  \item The optimal solution is just a few lines of code
+\end{itemize}
+
+I do not claim that the problem has been made by me in any manner. I
+found this question while attempting
+\href{https://foobar.withgoogle.com/}{Google FooBar}.
+
+\section*{Dodge the Lasers! (The Problem)}
+{\bfseries Someone who you earlier worked for has sent her elite
+fighter pilot squadron after you - and they've opened fire!
+
+Fortunately, you know something important about the ships trying to
+shoot you down. Back when you were still her assistant, she asked 
+you to help program the aiming mechanisms for the ships. They 
+undergo rigorous testing procedures, but you were still able to slip
+in a subtle bug. The software works as a time step simulation: if it is tracking a target that is accelerating away at $45$ degrees, the
+software will consider the targets acceleration to be equal to the
+$\sqrt{2}$, adding the calculated result to the targets end velocity
+at each timestep. However, thanks to your bug, instead of storing
+the result with proper precision, it will be truncated to an integer
+before adding the new velocity to your current position.  This means
+that instead of having your correct position, the targeting software
+will erringly report your position as-
+$$\sum_{i=1}^n \floor{i \cdot \sqrt{2}}$$
+not far enough off to fail her testing, but enough that it might
+just save your life.
+
+If you can quickly calculate the target of the starfighters' laser
+beams to know how far off they'll be, you can trick them into
+shooting an asteroid, releasing dust, and concealing the rest of
+your escape.  Write a function $solution(str_n)$ which, given the string representation of an integer $n$, returns the sum of
+$$\floor{1 \cdot \sqrt{2}} + \floor{2 \cdot \sqrt{2}} + \ldots + \floor{n \cdot \sqrt{2}}$$
+as a string. That is, for every number $i$ in the range $1$ to $n$,
+it adds up all of the integer portions of $i \cdot \sqrt{2}$.
+
+For example, if $str_n$ was $"5"$, the solution would be calculated 
+as-
+
+$floor(1*sqrt(2)) +$
+
+$floor(2*sqrt(2)) +$
+
+$floor(3*sqrt(2)) +$
+
+$floor(4*sqrt(2)) +$
+
+$floor(5*sqrt(2))$
+
+$= 1+2+4+5+7 = 19$
+
+so the function would return $"19"$
+}
+
+\subsection*{Twist}
+
+$n$ can have values upto $10^100$ which means it can have numbers 
+with 101 digits! Try solving this problem yourself first before
+heading to the solution.
+
+PS: If it was as easy as a for loop I would not have written this in
+the first place
+
+\subsection*{Hints}
+
+This seems like a very easy problem. If you remove the story line, 
+all you need to calculate is-
+
+$$\sum_{i=1}^n \floor{i \cdot \sqrt{2}}$$
+
+The only twist is you cant use recursion for each element or use a
+for loop as the numbers are too big. You need to try and simplify
+the expression.
+
+\section*{Solution}
+
+Just some convention-
+
+This type of sequence is called a  Beatty sequence. Beatty sequence
+is the sequence of integers found by taking the floor of the
+positive multiples of a positive irrational number. However, you do
+not require any knowledge of it to solve the problem. \\
+
+Let's define a function $\beta _r ^{(i)} = \floor{i \cdot r}$ for 
+some irrational number and
+
+$$S(r,n) = \sum_{i=1}^n \beta _r ^{(i)}$$
+
+if $r \geq 2$ we say $p = r - 1$ and we can also say-
+
+\begin{align*}
+S(p,n)&=S(s,n) + \sum_{i=1}^n \cdot i \\
+&=S(s,n) + \frac{n(n+1)}{2}
+\end{align*}
+
+Also, if $1 < r < 2$ and $\frac{1}{p} + \frac{1}{r} = 1$ then 
+sequences $\beta_r$ and $\beta_p$ for $n \geq 1$ partition
+$\mathbb{N}$
+
+So,
+
+$$S(r, n) + S(s, \lfloor \frac{\mathcal{B}_r^{(n)}}{s} \rfloor) =
+\sum_i^{\mathcal{B}_r^{(n)}} i =
+\frac{\mathcal{B}_r^{(n)}(\mathcal{B}_r^{(n)} + 1)}{2}$$
+
+And also
+
+\begin{align*}
+\lfloor \frac{\mathcal{B}_r^{(n)}}{s} \rfloor &= \lfloor
+\mathcal{B}_r^{(n)}(1 - \frac{1}{r}) \rfloor \\
+&= \mathcal{B}_r^{(n)} - \lceil \frac{\mathcal{B}_r^{(n)}}{r} \rceil
+\\ &= \mathcal{B}_r^{(n)} - n
+\end{align*}
+
+Then, letting $n^{\prime} = \lfloor (r - 1)n \rfloor =
+\mathcal{B}_{r-1}^{n}$
+we have 
+$$S(r,n) = \frac{\mathcal{B}_r^{(n)}(\mathcal{B}_r^{(n)} + 1)}{2} - S(p, n^{\prime}) = \frac{(n + n^{\prime})(n + n^{\prime} + 1)}{2} - S(p, n^{\prime})$$
+
+Back to the problem, we have $p = \sqrt{2}$, so we start with $p = 2
++ \sqrt{2}$. We can get a recurrence formula.
+Let $n^{\prime} = \lfloor (\sqrt{2} - 1)n \rfloor$
+
+\begin{align*}
+S(\sqrt{2}, n) 
+&= \frac{(n + n^{\prime})(n + n^{\prime} + 1)}{2} - S(2 + \sqrt{2},
+n^{\prime})\\
+&= \frac{(n + n^{\prime})(n + n^{\prime} + 1)}{2} -
+(n^{\prime}(n^{\prime} + 1) - S(\sqrt{2}, n^{\prime}))\\
+&= nn^{\prime} + \frac{n(n+1)}{2} - \frac{n^{\prime}(n^{\prime} +
+1)}{2} - S(\sqrt{2}, n^{\prime})
+\end{align*}
+
+And we solved the problem, got an optimal way to solve it :)
+
+\section*{In Code}
+
+Let us now take a look at implementing this in code. We will just
+convert all what we just talked about to code.
+
+\begin{lstlisting}[language=Python]
+minus_sqrt2 = 414213562373095048801688724209698078569671875376948 0731766797379907324784621070388503875343276415727
+def n1(n):
+    return (minus_sqrt2 * n) // (10 ** 100)
+def s(n):
+    if n == 1:
+        return 1
+    if n < 1:
+        return 0
+    return n * n1(n) + n * (n + 1) / 2 - n1(n) * (n1(n) + 1) / 2 - s(n1(n))
+def solution(n):
+    return str(s(int(n)))
+\end{lstlisting}
+
+In case you aren't able to view the rendered code block, navigate 
+down to "Try out yourself".
+
+You can see it is just 11 lines of code to tackle this problem! I 
+think this is pretty cool, as just your logic was what counted here
+and not knowledge of a programming language.
+
+\subsection*{Try out for yourself}
+
+You can try out this code for yourself using these links-
+\begin{itemize}
+    \item \href{https://github.com/Rishit-dagli/SOTA-Coding-Problem/blob/master/A_SOTA_Coding_problem_solution.ipynb}{Colab environment} 
+    - Requires a Google Account (Recommended)
+    \item \href{https://repl.it/@RishitDagli/A-SOTA-Coding-Problem}{Repl.it environment}
+\end{itemize}
+
+\section*{About Me}
+
+Hi everyone I am Rishit Dagli. This was my first time writing a blog
+on a specific problem which I feel could help others develop their
+logic. If you like this one and would love to see more of these kind
+from me, consider 
+\href{https://github.com/Rishit-dagli/SOTA-Coding-Problem}{starring 
+the repo}
+
+If you want to ask me some questions, report any mistake, suggest
+improvements, give feedback you are free to do so by emailing me at-
+
+\begin{itemize}
+    \item rishit.dagli@gmail.com
+    \item hello@rishit.tech
+\end{itemize}
+
+\end{document}
