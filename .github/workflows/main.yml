@@ -5,6 +5,8 @@ on: [push]
 jobs: 
   build: 
    runs-on: ubuntu-latest 
+   env: 
+    working-directory: ./Source
    
    steps: 
    
@@ -13,7 +15,7 @@ jobs:
    - name: Run make4ht 
      uses: docker://michalh21/make4ht-docker:latest 
      env: 
-       command: "make4ht -u -d out Source/main.tex" 
+       command: "make4ht -u -d out main.tex" 
        
    - name: Publish the web pages 
      uses: peaceiris/actions-gh-pages@v2.5.0 
